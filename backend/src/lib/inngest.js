@@ -19,6 +19,10 @@ const syncUser = inngest.createFunction(
       name: `${first_name || ""} ${last_name || ""}`,
       profileImage: image_url,
     };
+    if (!newUser.email) {
+      console.warn("User email is missing, skipping creation:", event.data);
+      return;
+    }
 
     await User.create(newUser);
 
