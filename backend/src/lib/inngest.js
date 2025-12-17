@@ -20,25 +20,22 @@ const syncUser = inngest.createFunction(
       profileImage: image_url,
     };
 
-    if (!newUser.email) {
-      console.warn("User email is missing, skipping creation:", event.data);
-      return;
-    }
-
-    console.log("Creating user:", newUser);
     await User.create(newUser);
+
+    //todo : do somethings 
   }
 );
 
 const deleteUserFromDB = inngest.createFunction(
   { id: "delete-user-from-db" },
-  { event: "clerk/user.deleted" }, // fixed typo
+  { event: "clerk/user.deleted" },
   async ({ event }) => {
     await connectDB();
     const { id } = event.data;
-    console.log("Deleting user with clerkId:", id);
     await User.deleteOne({ clerkId: id });
+
+    //todo : do somethings
   }
 );
 
-export const functions = [syncUser, deleteUserFromDB];
+export const functions = [syncUser,deleteUserFromDB];
