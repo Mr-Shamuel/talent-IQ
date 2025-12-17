@@ -6,14 +6,9 @@ import cors from "cors";
 import { serve } from "inngest/express";
 import { functions, inngest } from "./lib/inngest.js";
 
-
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
 
-// const __dirname = path.resolve();
+const __dirname = path.resolve();
 //middleware
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
@@ -27,30 +22,13 @@ app.get("/books", (req, res) => {
 });
 
 // make our app ready for developement
-// if (ENV.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-//   app.get("/{*any}", (req, res) => {
-//     res.sendFile(path.join(__dirname, "../frontend", "dist", ""));
-//   });
-// }
-
-
-
-
-if (ENV.NODE_ENV === "production") { 
-
-
-  // Path to frontend build
-  const frontendPath = path.join(__dirname, "../frontend/dist");
-
-  // Serve static files
-  app.use(express.static(frontendPath));
-
-  // Serve index.html for all unmatched routes
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", ""));
   });
 }
+
 const startServer = async () => {
   try {
     await connectDB();
